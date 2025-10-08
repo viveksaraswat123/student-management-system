@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Student Management System</h1>
+
+    <form method="POST" id="studentForm">
+      <input type="text" name="uni_no" placeholder="University Number" 
+             value="{{ selected_student.uni_no if selected_student }}" required readonly>
+      <input type="text" name="name" placeholder="Name" 
+             value="{{ selected_student.name if selected_student }}" required>
+      <input type="text" name="course" placeholder="Course" 
+             value="{{ selected_student.course if selected_student }}" required>
+      <input type="text" name="phone_number" placeholder="Phone Number" 
+             value="{{ selected_student.phone_number if selected_student }}" required>
+
+      <button type="submit" name="action" value="add" {% if selected_student %}disabled{% endif %}>Add Student</button>
+      <button type="submit" name="action" value="update" {% if not selected_student %}disabled{% endif %}>Update Student</button>
+    </form>
+
+    {% if students %}
+    <table>
+      <thead>
+        <tr>
+          <th>University No</th>
+          <th>Name</th>
+          <th>Course</th>
+          <th>Phone Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.uni_no }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ student.course }}</td>
+          <td>{{ student.phone_number }}</td>
+          <td>
+            <a href="/?edit={{ student.uni_no }}" class="edit_button">Edit</a>
+
+            <!-- Delete form -->
+            <form method="POST" style="display:inline;" onsubmit="return confirm('Delete student {{ student.name }}?');">
+              <input type="hidden" name="uni_no" value="{{ student.uni_no }}">
+              <button type="submit" name="action" value="delete" > Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</body>
+</html>
